@@ -10,7 +10,7 @@
 <body>
 
 
-    <div style="display:flex;flex-direction:column; max-width:500px; margin:0 auto">
+    <div class="card">
         <h1>Messajlar</h1>
         <ul class="messages">
         </ul>
@@ -35,8 +35,41 @@
         }
       
         $('#sendMessageButton').click(function () {
-            $.post('api/message-room/create', { message: $('#messageForm').val() })
+            $.ajax({
+                url: "/api/message-room/create",
+                method: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ message: $("#messageForm").val() }),
+                success: function () {
+                    $("#messageForm").val(""); // temizle
+                },
+                error: function (xhr) {
+                    console.log("Error:", xhr.status, xhr.responseText);
+                }
+            });
         });
     </script>
+    <style>
+        .card {
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ddd;
+            border: 1px solid #ccc;
+            border-radius:5px;
+            padding:10px;
+            min-height:100px;
+        }
+
+        #sendMessageButton{
+            background:#0094ff;
+            color:#fff;
+            border:0;
+            padding:10px;
+        }
+        
+    </style>
 </body>
 </html>

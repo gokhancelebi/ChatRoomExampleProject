@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using WEB.API.Hubs;
+using WEB.API.DTOs;
 
 namespace WEB.API.Controllers
 {
@@ -15,11 +16,10 @@ namespace WEB.API.Controllers
         }
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateMessage()
+        public async Task<IActionResult> CreateMessage( [FromBody] SendMessageDTO dto)
         {
-            var message = "Test";
             await _hubContext.Clients.All
-                .SendAsync("MessageSend",message);
+                .SendAsync("MessageSend",dto.Message);
 
             return Ok(new { Message = "Message Sent" });
         }
