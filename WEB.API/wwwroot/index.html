@@ -1,0 +1,42 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Message Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.6/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+
+    <div style="display:flex;flex-direction:column; max-width:500px; margin:0 auto">
+        <h1>Messajlar</h1>
+        <ul class="messages">
+        </ul>
+        <textarea id="messageForm"></textarea>
+        <input type="submit" id="sendMessageButton" value="Send Message"/>
+    </div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/hubs/message-room")
+            .build();
+
+        connection.on('MessageSend', function (message) {
+            addMessageToList(message);
+        });
+
+        connection.start();
+
+        function addMessageToList(message) {
+            $('.messages').append("<li>" + message + "</li>");
+             
+        }
+      
+        $('#sendMessageButton').click(function () {
+            $.post('api/message-room/create', { message: $('#messageForm').val() })
+        });
+    </script>
+</body>
+</html>
